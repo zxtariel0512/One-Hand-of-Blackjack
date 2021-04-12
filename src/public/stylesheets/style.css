@@ -118,21 +118,26 @@ button {
     font-family:fantasy;
     font-weight: bold;
     width: 70px;
+    text-align: center;
 }
 
 
 .hit{
     color: red;
     border-color: red;
-    position: fixed;
-    bottom: 70px;
-    left: 620px;
+    margin-top: 30px;
 }
 
 .stand{
     color: black;
     border-color: black;
-    position: fixed;
-    bottom: 70px;
-    right: 620px;
+    margin-top: 30px;
+}
+
+.result{
+    color: red;
+    font-size: xx-large;
+    border-style: dashed;
+    border-color: darkred;
+    padding: 4px;
 }

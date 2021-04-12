@@ -103,11 +103,26 @@ function main(){
                 gameEnd(winner, computerDiv, computerScore);
             }
         }
+        // computer's tern
         function clickStand(evt){
             while(computerScore < 15){
                 computer.push(shuffled[0]);
-                computerDiv
+                computerDiv.appendChild(createCard(computer[computer.length - 1].face, computer[computer.length - 1].suit));
+                shuffled.splice(0, 1);
+                computerScore = updateScore(computer);
             }
+            if(computerScore > 21){
+                winner = 1;
+            } else{
+                if(computerScore > userScore){
+                    winner = 0;
+                } else if(computerScore === userScore){
+                    winner = -1;
+                } else{
+                    winner = 1;
+                }
+            }
+            gameEnd(winner, computerDiv, computerScore);
         }
     }
 }

@@ -16,7 +16,7 @@ function main(){
         const form = document.querySelector('.start');
         form.classList.add('disappear');
 
-        // get the input, initialize 2 cards for each
+        // get the input
         const input = document.querySelector('#startValues').value.split(',');
         const shuffled = generateCards(input);
         computer.push(shuffled[0]);
@@ -24,18 +24,28 @@ function main(){
         computer.push(shuffled[2]);
         user.push(shuffled[3]);
 
+        // create buttons
+        const hit = document.createElement('button');
+        hit.classList.add('hit');
+        hit.appendChild(document.createTextNode('Hit'));
+        const stand = document.createElement('button');
+        stand.classList.add('stand');
+        stand.appendChild(document.createTextNode('stand'));
+        game.appendChild(hit);
+        game.appendChild(stand);
+        
+
+        // scores
         userScore = updateScore(user);
         computerScore = updateScore(computer);
 
+        // initialize 2 cards for each
         const userH = document.createElement('h4');
         userH.appendChild(document.createTextNode(`Player Hand -- Total: ${userScore}`));
         const computerH = document.createElement('h4');
         computerH.appendChild(document.createTextNode(`Computer Hand -- Total: ?`));
         game.appendChild(computerH);
         
-
-
-
         const computerDiv = document.createElement('div');
         computerDiv.classList.add('computer');
         game.appendChild(computerDiv);

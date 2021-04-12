@@ -24,6 +24,7 @@ form{
 }
 
 .playBtn{
+    color: white;
     font-size: large;
     font-family:fantasy;
     font-weight: bold;
@@ -101,4 +102,37 @@ h4{
     text-align: center;
     padding: 2px;
     width: 300px;
+}
+
+button {
+    background: white;
+    border-style: inset;
+    border-width: medium;
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family:fantasy;
+    font-weight: bold;
+    width: 70px;
+}
+
+
+.hit{
+    color: red;
+    border-color: red;
+    position: fixed;
+    bottom: 70px;
+    left: 620px;
+}
+
+.stand{
+    color: black;
+    border-color: black;
+    position: fixed;
+    bottom: 70px;
+    right: 620px;
 }

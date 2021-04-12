@@ -1,28 +1,3 @@
-function main(){
-
-    let user = [];
-    let computer = [];
-    
-    // make the form disappear after clicking the play button
-    const playButton = document.querySelector('.playBtn');
-    playButton.addEventListener('click', formDisappear);
-    function formDisappear(evt){
-        const form = document.querySelector('.start');
-        form.classList.add('disappear');
-        evt.preventDefault();
-    }
-
-    // get the input, initialize 2 cards for each
-    const input = document.querySelector('#startValues').value.split(',');
-    const shuffled = generateCards(input);
-    computer.push(shuffled[0]);
-    user.push(shuffled[1]);
-    computer.push(shuffled[2]);
-    user.push(shuffled[3]);
-
-
-}
-
 function generateCards(input){
     let cards = [];
     let shuffled = [];
@@ -40,12 +15,14 @@ function generateCards(input){
             }
         }
     }
+    console.log(cards.length);
     while(cards.length > 0){
         const idx = Math.floor(Math.random() * cards.length);
         shuffled.push(cards[idx]);
         cards.splice(idx, 1);
     }
+    console.log(shuffled.length);
     return shuffled;
 }
 
-document.addEventListener('DOMContentLoaded', main);
+console.log(generateCards(['2']));

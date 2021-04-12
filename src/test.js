@@ -3,14 +3,14 @@ function generateCards(input){
     let shuffled = [];
     if(input.length !== 0){
         for(let i = 0; i < input.length; i++){
-            shuffled.push({face: input[i], suit: 'clubs'});
+            shuffled.push({face: input[i], suit: '♣'});
         }
     }
     const allFaces = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    const allSuits = ['clubs', 'diamonds', 'hearts', 'spades'];
+    const allSuits = ['♣', '♦', '♥', '♠'];
     for(let i = 0; i < allFaces.length; i++){
         for(let j = 0; j < allSuits.length; j++){
-            if(allSuits[j] !== 'clubs' || input.indexOf(allFaces[i]) === -1){
+            if(allSuits[j] !== '♣' || input.indexOf(allFaces[i]) === -1){
                 cards.push({face: allFaces[i], suit: allSuits[j]});
             }
         }
@@ -25,4 +25,4 @@ function generateCards(input){
     return shuffled;
 }
 
-console.log(generateCards(['2']));
+console.log(generateCards([]));

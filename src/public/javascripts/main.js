@@ -1,5 +1,3 @@
-
-
 function main(){
 
     let user = [];
@@ -7,6 +5,7 @@ function main(){
     let userScore = 0;
     let computerScore = 0;
     let winner = -1;
+    let input;
     
     // make the form disappear after clicking the play button
     const playButton = document.querySelector('.playBtn');
@@ -18,8 +17,12 @@ function main(){
         form.classList.add('disappear');
 
         // get the input
-        const input = document.querySelector('#startValues').value.split(',');
+        input = document.querySelector('#startValues').value.split(',');
+        if(input[0] === ''){
+            input = [];
+        }
         const shuffled = generateCards(input);
+        console.log(shuffled);
         computer.push(shuffled[0]);
         shuffled.splice(0, 1);
         user.push(shuffled[0]);
@@ -53,14 +56,15 @@ function main(){
             const computerHand = computerDiv.querySelector('.card');
             console.log(computerHand);
             // computerDiv.removeChild(document.getElementById('unknownCard'))
-            computerDiv.replaceChild(createCard(computer[computer.length - 1].face, computer[computer.length - 1].suit), document.getElementById('unknownCard'));
+            computerDiv.replaceChild(createCard(computer[0].face, computer[0].suit), document.getElementById('unknownCard'));
             computerDiv.firstChild.firstChild.nodeValue = `Computer Hand -- Total: ${computerScore}`;
         }
         
 
-        // scores
+        // scores after initial four cards
         userScore = updateScore(user);
         computerScore = updateScore(computer);
+        console.log(computer);
 
         // initialize 2 cards for each
         const userH = document.createElement('h4');
@@ -98,14 +102,18 @@ function main(){
             userScore = updateScore(user);
             userDiv.firstChild.firstChild.nodeValue = `Player Hand -- Total: ${userScore}`;
             console.log(userScore);
-            if(userScore > 20){
+            if(userScore > 21){
                 winner = 0;
                 gameEnd(winner, computerDiv, computerScore);
             }
         }
         // computer's tern
         function clickStand(evt){
+            computerScore = updateScore(computer);
+            console.log(computerScore);
+            console.log(userScore);
             while(computerScore < 15){
+                //computer hits
                 computer.push(shuffled[0]);
                 computerDiv.appendChild(createCard(computer[computer.length - 1].face, computer[computer.length - 1].suit));
                 shuffled.splice(0, 1);
@@ -129,23 +137,21 @@ function main(){
 
 function updateScore(arr, a = false){
     let score = 0;
+    let numAce = 0;
     for(let i = 0; i < arr.length; i++){
         if(arr[i].face === 'A'){
-            a = true;
+            numAce++;
         } else if(arr[i].face === 'J' || arr[i].face === 'Q' || arr[i].face === 'K'){
             score += 10;
         } else{
             score += parseInt(arr[i].face);
         }
     }
-    if(a === true){
-        const attempt = score + 11;
-        if(attempt > 21){
-            score += 1;
-        } else{
-            score = attempt
-        }
+    while(score + 11 < 21 && numAce >0){
+        score += 11;
+        numAce--;
     }
+    score += numAce;
     return score;
 }
 
@@ -188,26 +194,32 @@ function createCard(face, suit, visible = true){
 }
 
 function generateCards(input){
+    console.log(input);
     let cards = [];
     let shuffled = [];
-    if(input.length !== 0){
-        for(let i = 0; i < input.length; i++){
-            shuffled.push({face: input[i], suit: '♠'});
-        }
-    }
     const allFaces = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    const allSuits = ['♠', '♥', '♣', '♦'];
+    const allSuits = ['♣', '♦', '♥', '♠'];
+    //making all the cards
     for(let i = 0; i < allFaces.length; i++){
         for(let j = 0; j < allSuits.length; j++){
-            if(allSuits[j] !== '♠' || input.indexOf(allFaces[i]) === -1){
-                cards.push({face: allFaces[i], suit: allSuits[j]});
-            }
+            cards.push({face: allFaces[i], suit: allSuits[j]});
         }
     }
+    //shuffling
     while(cards.length > 0){
         const idx = Math.floor(Math.random() * cards.length);
         shuffled.push(cards[idx]);
         cards.splice(idx, 1);
+    }
+    //process user input if anything, by bring those specified cards to the front
+    if(input.length !== 0){
+        for(let i = 0; i < input.length; i++){
+            const j = shuffled.findIndex((card) => card.face === input[i] && card.toFront === undefined);
+            const wantedCard = shuffled[j];
+            shuffled[j] = shuffled[i];
+            shuffled[i] = wantedCard;
+            shuffled[i].toFront = true;
+        }
     }
     return shuffled;
 }

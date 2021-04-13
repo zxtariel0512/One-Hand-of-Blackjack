@@ -1,157 +1,4 @@
-function main(){
-    
-    // make the form disappear after clicking the play button
-    const playButton = document.querySelector('.playBtn');
-    playButton.addEventListener('click', formDisappear);
-    let game = document.querySelector('.game');
-
-
-    function formDisappear(evt){
-        let user = [];
-        let computer = [];
-        let userScore = 0;
-        let computerScore = 0;
-        let winner = -1;
-        let input;
-        evt.preventDefault();
-        const form = document.querySelector('.start');
-        form.classList.add('disappear');
-
-        // get the input
-        input = document.querySelector('#startValues').value.split(',');
-        if(input[0] === ''){
-            input = [];
-        }
-        const shuffled = generateCards(input);
-        console.log(shuffled);
-        computer.push(shuffled[0]);
-        shuffled.splice(0, 1);
-        user.push(shuffled[0]);
-        shuffled.splice(0, 1);
-        computer.push(shuffled[0]);
-        shuffled.splice(0, 1);
-        user.push(shuffled[0]);
-        shuffled.splice(0, 1);
-
-        // create buttons
-        const hit = document.createElement('button');
-        hit.classList.add('hit');
-        hit.appendChild(document.createTextNode('Hit'));
-        const stand = document.createElement('button');
-        stand.classList.add('stand');
-        stand.appendChild(document.createTextNode('stand'));
-
-        function gameEnd(winner, computerDiv, computerScore){
-            hit.classList.add('disappear');
-            stand.classList.add('disappear');
-            const result = document.createElement('h4');
-            result.classList.add('result');
-            if(winner === -1){
-                result.appendChild(document.createTextNode('Oops, tie! 😕'));
-            } else if(winner === 0){
-                result.appendChild(document.createTextNode('User lost, saaaad! 😭'));
-            } else{
-                result.appendChild(document.createTextNode('Bravo! User wins! 🤠'));
-            }
-            game.appendChild(result);
-            const computerHand = computerDiv.querySelector('.card');
-            console.log(computerHand);
-            // computerDiv.removeChild(document.getElementById('unknownCard'))
-            computerDiv.replaceChild(createCard(computer[0].face, computer[0].suit), document.getElementById('unknownCard'));
-            computerDiv.firstChild.firstChild.nodeValue = `Computer Hand -- Total: ${computerScore}`;
-            restart.classList.remove('disappear');
-        }
-        
-
-        // scores after initial four cards
-        userScore = updateScore(user);
-        computerScore = updateScore(computer);
-        console.log(computer);
-
-        // initialize 2 cards for each
-        const userH = document.createElement('h4');
-        userH.appendChild(document.createTextNode(`Player Hand -- Total: ${userScore}`));
-        const computerH = document.createElement('h4');
-        computerH.appendChild(document.createTextNode(`Computer Hand -- Total: ?`));
-        
-        const computerDiv = document.createElement('div');
-        computerDiv.classList.add('computer');
-        game.appendChild(computerDiv);
-        computerDiv.appendChild(computerH);
-        const unknownCard = createCard(computer[0].face, computer[0].suit, false);
-        unknownCard.setAttribute('id', 'unknownCard');
-        computerDiv.appendChild(unknownCard);
-        computerDiv.appendChild(createCard(computer[1].face, computer[1].suit));
-        userH.classList.add('userScore');
-        game.appendChild(userH);
-        const userDiv = document.createElement('div');
-        userDiv.classList.add('user');
-        game.appendChild(userDiv);
-        userDiv.appendChild(userH);
-        userDiv.appendChild(createCard(user[0].face, user[0].suit));
-        userDiv.appendChild(createCard(user[1].face, user[1].suit));
-
-        game.appendChild(hit);
-        game.appendChild(stand);
-        // create events for hit and stand
-        hit.addEventListener('click', clickHit);
-        stand.addEventListener('click', clickStand);
-        function clickHit(evt){
-            user.push(shuffled[0]);
-            userDiv.appendChild(createCard(user[user.length - 1].face, user[user.length - 1].suit))
-            shuffled.splice(0, 1);
-            userScore = updateScore(user);
-            userDiv.firstChild.firstChild.nodeValue = `Player Hand -- Total: ${userScore}`;
-            console.log(userScore);
-            if(userScore > 21){
-                winner = 0;
-                gameEnd(winner, computerDiv, computerScore);
-            }
-        }
-        // computer's tern
-        function clickStand(evt){
-            computerScore = updateScore(computer);
-            console.log(computerScore);
-            console.log(userScore);
-            while(computerScore < 15){
-                //computer hits
-                computer.push(shuffled[0]);
-                computerDiv.appendChild(createCard(computer[computer.length - 1].face, computer[computer.length - 1].suit));
-                shuffled.splice(0, 1);
-                computerScore = updateScore(computer);
-            }
-            if(computerScore > 21){
-                winner = 1;
-            } else{
-                if(computerScore > userScore){
-                    winner = 0;
-                } else if(computerScore === userScore){
-                    winner = -1;
-                } else{
-                    winner = 1;
-                }
-            }
-            gameEnd(winner, computerDiv, computerScore);
-        }
-        const restart = document.createElement('button');
-        restart.appendChild(document.createTextNode('Restart'));
-        restart.classList.add('restart');
-        restart.classList.add('disappear');
-        game.appendChild(restart);
-        restart.addEventListener('click', restartGame);
-        function restartGame(evt){
-            while(game.firstChild){
-                if(!game.firstChild.isEqualNode(form)){
-                    game.removeChild(game.firstChild);
-                }
-            }
-            document.querySelector('form').reset();
-            form.classList.remove('disappear');
-        }
-    }
-}
-
-function updateScore(arr, a = false){
+function updateScore(arr){
     let score = 0;
     let numAce = 0;
     for(let i = 0; i < arr.length; i++){
@@ -211,8 +58,8 @@ function createCard(face, suit, visible = true){
 
 function generateCards(input){
     console.log(input);
-    let cards = [];
-    let shuffled = [];
+    const cards = [];
+    const shuffled = [];
     const allFaces = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
     const allSuits = ['♣', '♦', '♥', '♠'];
     //making all the cards
@@ -239,5 +86,163 @@ function generateCards(input){
     }
     return shuffled;
 }
+
+
+function main(){
+    const game = document.querySelector('.game');
+
+    function formDisappear(evt){
+        const user = [];
+        const computer = [];
+        let userScore = 0;
+        let computerScore = 0;
+        let winner = -1;
+        let input;
+        evt.preventDefault();
+        const form = document.querySelector('.start');
+        form.classList.add('disappear');
+
+        // get the input
+        input = document.querySelector('#startValues').value.split(',');
+        if(input[0] === ''){
+            input = [];
+        }
+        const shuffled = generateCards(input);
+        console.log(shuffled);
+        computer.push(shuffled[0]);
+        shuffled.splice(0, 1);
+        user.push(shuffled[0]);
+        shuffled.splice(0, 1);
+        computer.push(shuffled[0]);
+        shuffled.splice(0, 1);
+        user.push(shuffled[0]);
+        shuffled.splice(0, 1);
+
+        // create buttons
+        const hit = document.createElement('button');
+        hit.classList.add('hit');
+        hit.appendChild(document.createTextNode('Hit'));
+        const stand = document.createElement('button');
+        stand.classList.add('stand');
+        stand.appendChild(document.createTextNode('stand'));
+
+        const restart = document.createElement('button');
+
+        function gameEnd(winner, computerDiv, computerScore){
+            hit.classList.add('disappear');
+            stand.classList.add('disappear');
+            const result = document.createElement('h4');
+            result.classList.add('result');
+            if(winner === -1){
+                result.appendChild(document.createTextNode('Oops, tie! 😕'));
+            } else if(winner === 0){
+                result.appendChild(document.createTextNode('User lost, saaaad! 😭'));
+            } else{
+                result.appendChild(document.createTextNode('Bravo! User wins! 🤠'));
+            }
+            game.appendChild(result);
+            const computerHand = computerDiv.querySelector('.card');
+            console.log(computerHand);
+            // computerDiv.removeChild(document.getElementById('unknownCard'))
+            computerDiv.replaceChild(createCard(computer[0].face, computer[0].suit), document.getElementById('unknownCard'));
+            computerDiv.firstChild.firstChild.nodeValue = `Computer Hand -- Total: ${computerScore}`;
+            restart.classList.remove('disappear');
+        }
+        
+
+        // scores after initial four cards
+        userScore = updateScore(user);
+        computerScore = updateScore(computer);
+        console.log(computer);
+
+        // initialize 2 cards for each
+        const userH = document.createElement('h4');
+        userH.appendChild(document.createTextNode(`Player Hand -- Total: ${userScore}`));
+        const computerH = document.createElement('h4');
+        computerH.appendChild(document.createTextNode(`Computer Hand -- Total: ?`));
+        
+        const computerDiv = document.createElement('div');
+        computerDiv.classList.add('computer');
+        game.appendChild(computerDiv);
+        computerDiv.appendChild(computerH);
+        const unknownCard = createCard(computer[0].face, computer[0].suit, false);
+        unknownCard.setAttribute('id', 'unknownCard');
+        computerDiv.appendChild(unknownCard);
+        computerDiv.appendChild(createCard(computer[1].face, computer[1].suit));
+        userH.classList.add('userScore');
+        game.appendChild(userH);
+        const userDiv = document.createElement('div');
+        userDiv.classList.add('user');
+        game.appendChild(userDiv);
+        userDiv.appendChild(userH);
+        userDiv.appendChild(createCard(user[0].face, user[0].suit));
+        userDiv.appendChild(createCard(user[1].face, user[1].suit));
+
+        game.appendChild(hit);
+        game.appendChild(stand);
+        // create events for hit and stand
+        function clickHit(){
+            user.push(shuffled[0]);
+            userDiv.appendChild(createCard(user[user.length - 1].face, user[user.length - 1].suit));
+            shuffled.splice(0, 1);
+            userScore = updateScore(user);
+            userDiv.firstChild.firstChild.nodeValue = `Player Hand -- Total: ${userScore}`;
+            console.log(userScore);
+            if(userScore > 21){
+                winner = 0;
+                gameEnd(winner, computerDiv, computerScore);
+            }
+        }
+        function clickStand(){
+            computerScore = updateScore(computer);
+            console.log(computerScore);
+            console.log(userScore);
+            while(computerScore < 15){
+                //computer hits
+                computer.push(shuffled[0]);
+                computerDiv.appendChild(createCard(computer[computer.length - 1].face, computer[computer.length - 1].suit));
+                shuffled.splice(0, 1);
+                computerScore = updateScore(computer);
+            }
+            if(computerScore > 21){
+                winner = 1;
+            } else if(computerScore > userScore){
+                winner = 0;
+            } else if(computerScore === userScore){
+                winner = -1;
+            } else{
+                winner = 1;
+            }
+            gameEnd(winner, computerDiv, computerScore);
+        }
+        hit.addEventListener('click', clickHit);
+        stand.addEventListener('click', clickStand);
+        
+        
+        
+        restart.appendChild(document.createTextNode('Restart'));
+        restart.classList.add('restart');
+        restart.classList.add('disappear');
+        game.appendChild(restart);
+        function restartGame(){
+            while(game.firstChild){
+                if(!game.firstChild.isEqualNode(form)){
+                    game.removeChild(game.firstChild);
+                }
+            }
+            document.querySelector('form').reset();
+            form.classList.remove('disappear');
+        }
+        restart.addEventListener('click', restartGame);
+        
+    }
+    
+    // make the form disappear after clicking the play button
+    const playButton = document.querySelector('.playBtn');
+    playButton.addEventListener('click', formDisappear);
+    
+
+}
+
 
 document.addEventListener('DOMContentLoaded', main);

@@ -1,6 +1,6 @@
 body {
     background-image: url("../img/background.jpeg");
-    padding: 30px;
+    padding: 10px;
     font-size: large;
     font-family:fantasy;
     font-weight: bold;
@@ -142,11 +142,9 @@ button {
     padding: 4px;
 }
 
-/* .restart{
-    background: green;
-    color: white;
-    font-size: large;
-    font-family:fantasy;
-    font-weight: bold;
-    padding: 5px;
-} */
+.restart{
+    background: lightgray;
+    color: green;
+    width: fit-content;
+    margin-top: 30px;
+}

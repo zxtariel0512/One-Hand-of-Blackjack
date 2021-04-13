@@ -1,17 +1,18 @@
 function main(){
-
-    let user = [];
-    let computer = [];
-    let userScore = 0;
-    let computerScore = 0;
-    let winner = -1;
-    let input;
     
     // make the form disappear after clicking the play button
     const playButton = document.querySelector('.playBtn');
     playButton.addEventListener('click', formDisappear);
-    const game = document.querySelector('.game');
+    let game = document.querySelector('.game');
+
+
     function formDisappear(evt){
+        let user = [];
+        let computer = [];
+        let userScore = 0;
+        let computerScore = 0;
+        let winner = -1;
+        let input;
         evt.preventDefault();
         const form = document.querySelector('.start');
         form.classList.add('disappear');
@@ -58,6 +59,7 @@ function main(){
             // computerDiv.removeChild(document.getElementById('unknownCard'))
             computerDiv.replaceChild(createCard(computer[0].face, computer[0].suit), document.getElementById('unknownCard'));
             computerDiv.firstChild.firstChild.nodeValue = `Computer Hand -- Total: ${computerScore}`;
+            restart.classList.remove('disappear');
         }
         
 
@@ -91,7 +93,6 @@ function main(){
 
         game.appendChild(hit);
         game.appendChild(stand);
-
         // create events for hit and stand
         hit.addEventListener('click', clickHit);
         stand.addEventListener('click', clickStand);
@@ -131,6 +132,21 @@ function main(){
                 }
             }
             gameEnd(winner, computerDiv, computerScore);
+        }
+        const restart = document.createElement('button');
+        restart.appendChild(document.createTextNode('Restart'));
+        restart.classList.add('restart');
+        restart.classList.add('disappear');
+        game.appendChild(restart);
+        restart.addEventListener('click', restartGame);
+        function restartGame(evt){
+            while(game.firstChild){
+                if(!game.firstChild.isEqualNode(form)){
+                    game.removeChild(game.firstChild);
+                }
+            }
+            document.querySelector('form').reset();
+            form.classList.remove('disappear');
         }
     }
 }
